@@ -1,6 +1,6 @@
-#!/system/bin/sh
+#!/система/бин/ш
 
-# Different linux rootfs archives from linuxcontainers.org install script.
+# Различные архивы linux rootfs из сценария установки linuxcontainers.org.
 
 set -e
 
@@ -22,7 +22,7 @@ echo '  ROOTFS_URL - override root FS source URL'
 }
 ###
 
-# We can't simply use `()' to introduce a newly exported TMPDIR to the shell in Android 10.
+# Мы не можем просто использовать `()', чтобы ввести только что экспортированный TMPDIR в оболочку в Android 10.
 _TMPDIR="$DATA_DIR/tmp"
 if [ "$_TMPDIR" != "$TMPDIR" ] ; then
 export TMPDIR="$_TMPDIR"
@@ -42,7 +42,7 @@ echo "$@" >&2
 exit 1
 }
 
-# === Locale ===
+# === Локальный ===
 if [ -z "$LANG" ] ; then
   export LANG='en_US.UTF-8'
 else
@@ -53,8 +53,8 @@ else
 fi
 # ===        ===
 
-NI= # Non-interactive
-UP= # Essentials plugin: force / no
+NI= # Не интерактивный
+UP= # Плагин Essentials: принудительно/нет
 while true ; do
 case "$1" in
 --) shift ; break ;;
@@ -75,12 +75,17 @@ PROOT="${PROOT:-'$DATA_DIR/root/bin/proot'}"
 PROOT_USERLAND="${PROOT:-'$DATA_DIR/root/bin/proot-userland'}"
 ESSENTIALS="${ESSENTIALS_PKG:-green_green_avk.anothertermshellplugin_android10essentials}"
 
+# В этом разделе проверяется, предоставлены ли необходимые аргументы командной строки,
+#  в противном случае скрипт показывает использование и завершает работу.
 if [ -z "$1" -o -z "$2" ] ; then
 show_usage
 exit 1
 fi
 
-find_prefix() { # Old Androids have no `grep'.
+# В этом разделе определена функция find_prefix, которая ищет совпадающую строку
+# во входном потоке и возвращает совпавшую строку, если она найдена.
+
+find_prefix() { # В старых Android нет `grep'.
 local L
 while read -r L ; do
 case $L in
@@ -90,13 +95,19 @@ done
 return 1
 }
 
+# В этом разделе определена функция prompt, которая отображает 
+# подсказку со значением по умолчанию, считывает ввод пользователя и присваивает введенное значение переменной.
+
 prompt() {
 echo -en "\e[1m$1 [\e[0m$2\e[1m]:\e[0m "
 local _V
 read _V
 _V="${_V:-"$2"}"
-eval "$3=${_V@Q}" # Default shell can't `typeset -g' before Android 8.
+eval "$3=${_V@Q}" # Оболочка по умолчанию не может `typeset -g' до Android 8.
 }
+
+# В этом разделе определена функция to_uname_arch, которая сопоставляет
+# имена архитектур процессоров Android с соответствующими архитектурами uname.
 
 to_uname_arch() {
 case "$1" in
@@ -108,6 +119,9 @@ amd64) echo x86_64 ;;
 esac
 }
 
+# функция validate_arch, которая проверяет, действительно ли
+# заданное имя архитектуры, и возвращает имя архитектуры, если оно действительно.
+
 validate_arch() {
 case "$1" in
 armv7a|aarch64|i686|amd64) echo $1 ; return 0 ;;
@@ -115,16 +129,22 @@ armv7a|aarch64|i686|amd64) echo $1 ; return 0 ;;
 esac
 }
 
+#  функция validate_dir, которая проверяет, является ли 
+#  заданный каталог действительным, и возвращает true, если он действителен.
+
 validate_dir() { [ -d "$1" -a -r "$1" -a -w "$1" -a -x "$1" ] ; }
 
+#  устанавливает переменную PROOTS в значение "proots"
 PROOTS='proots'
 
+# и запрашивает у пользователя имя каталога установки, если переменная NI не определена.
 if [ -z "$NI" ] ; then
 NAME="linuxcontainers-$DISTRO-$RELEASE"
 echo
 prompt "Installation subdir name $PROOTS/___" "$NAME" NAME
 fi
 
+# создает каталог установки, если он не существует
 mkdir -p "$DATA_DIR/$PROOTS"
 if ! validate_dir "$DATA_DIR/$PROOTS" ; then
 echo -e "\nUnable to create \$DATA_DIR/$PROOTS"
@@ -134,58 +154,76 @@ fi
 NAME_C=1
 NAME_S=
 NAME_B="$NAME"
+
+# Цикл до тех пор, пока не будет найдено уникальное имя для каталога rootfs
 while true ; do
+# Сгенерируйте новое имя, используя основание и суффикс
 NAME="$NAME_B$NAME_S"
+# Установите путь к каталогу rootfs
 ROOTFS_DIR="$PROOTS/$NAME"
+# Попытаться создать каталог rootfs и выйти из цикла в случае успеха
 if mkdir "$DATA_DIR/$ROOTFS_DIR" >/dev/null 2>&1 ; then break ; fi
+# Проверьте, не было ли установлено слишком много каталогов rootfs
 if [ "$NAME_C" -gt 100 ] ; then
 echo -e '\nSuspiciously many rootfses installed'
 exit 1
 fi
+# Увеличиваем счетчик имен и обновляем суффикс
 NAME_C="$(($NAME_C+1))"
 NAME_S="-$NAME_C"
 done
 
+# Выведите фактическое имя каталога rootfs и инструкции по его удалению
 echo -e "\nActual name: $NAME\n"
 echo -e "To uninstall: run \`rm -rf \"\$DATA_DIR/$ROOTFS_DIR\"'\n"
 
+# Установите путь к двоичному файлу minitar
 MINITAR="$DATA_DIR/minitar"
 
 
 echo 'Creating favorites...'
-
+# Создайте сценарий для запуска внутри каталога rootfs
 echo -e '#!/system/bin/sh\n\necho Installing... Try later.' > "$DATA_DIR/$ROOTFS_DIR/run"
+# Сделайте скрипт исполняемым
 chmod 755 "$DATA_DIR/$ROOTFS_DIR/run"
 
+# Установите параметры терминала в зависимости от выбранного дистрибутива
 case "$DISTRO" in
 alpine) RUN_OPTS_TERM='xterm-xfree86' ;;
 *) RUN_OPTS_TERM='' ;;
 esac
 
+# Установите команду для выполнения внутри каталога rootfs
 RUN="/system/bin/sh \"\$DATA_DIR/$ROOTFS_DIR/run\""
 
+# Создайте избранное для root и обычного пользователя, если он не находится в неинтерактивном режиме
 if [ -z "$NI" ] ; then
-
+# Установите параметры терминала для избранного
 if [ -n "$RUN_OPTS_TERM" ] ; then
 RUN_OPTS="&terminal_string=$RUN_OPTS_TERM"
 else
 RUN_OPTS=''
 fi
+# Кодировать команду для URI
 UE_RUN="$("$TERMSH" uri-encode "$RUN")"
+# Создать избранное для пользователя root
 "$TERMSH" view \
 -r 'green_green_avk.anotherterm.FavoriteEditorActivity' \
 -u "local-terminal:/opts?execute=${UE_RUN}%200%3A0&name=$("$TERMSH" uri-encode "$NAME (root)")$RUN_OPTS"
+# Создать избранное для обычного пользователя
 "$TERMSH" view \
 -r 'green_green_avk.anotherterm.FavoriteEditorActivity' \
 -u "local-terminal:/opts?execute=${UE_RUN}&name=$("$TERMSH" uri-encode "$NAME")$RUN_OPTS"
 
 else
-
+# Запросить разрешение на управление избранным
 "$TERMSH" request-permission favmgmt 'Installer is going to create a regular user and a root launching favs.' \
+# Установите ловушку для отзыва разрешения и снимите функцию ловушки, когда она будет завершена
 && {
 finally() { "$TERMSH" revoke-permission favmgmt ; trap - EXIT ; unset finally ; }
 trap 'finally' EXIT
 } || [ $? -eq 3 ]
+# Установите параметры терминала для избранного
 if [ -n "$RUN_OPTS_TERM" ] ; then
 RUN_OPTS=(-t "$RUN_OPTS_TERM")
 else
@@ -199,16 +237,20 @@ fi
 
 echo 'Done.'
 
-
+# Проверьте архитектуру устройства, проверив вывод команды "uname -m".
+# Если "uname -m" недоступен (например, на старых версиях Android), используйте первый ABI, указанный в MY_DEVICE_ABIS.
+# Полученная архитектура хранится в переменной $ARCH.
 # There is no uname on old Androids.
 ARCH="$(validate_arch "$(uname -m 2>/dev/null)" || ( aa=($MY_DEVICE_ABIS) ; to_uname_arch "${aa[0]}" ))"
 
+# Если версия Android SDK меньше 21, добавьте '-pre5' к варианту rootfs.
 VARIANT=''
 if [ -n "$MY_ANDROID_SDK" -a "$MY_ANDROID_SDK" -lt 21 ]
 then
 VARIANT='-pre5'
 fi
 
+# Преобразуйте имена архитектур, используемые контейнерами Linux, в имена, используемые minitar.
 to_minitar_arch() {
 case "$1" in
 armv7a) echo armeabi-v7a ;;
@@ -219,6 +261,7 @@ amd64) echo x86_64 ;;
 esac
 }
 
+# Преобразуйте имена архитектур, используемые контейнерами Linux, в имена архитектур, используемые интерактивными образами LXC.
 to_lco_arch() {
 case "$1" in
 armv7a) echo armhf ;;
@@ -229,11 +272,15 @@ x86_64) echo amd64 ;;
 esac
 }
 
+# Получить URL-адрес tarball rootfs для указанной архитектуры и варианта из онлайн-репозитория образов LXC.
 to_lco_link() {
 local R
 local P
+
+# Загрузите индекс доступных образов с сайта LXC и найдите требуемый образ.
 R="$( { "$TERMSH" cat 'https://images.linuxcontainers.org/meta/1.0/index-user' || exit_with 'Cannot download index from linuxcontainers.org' ;} \
 | { find_prefix "$DISTRO;$RELEASE;$(to_lco_arch "$1");default;" || exit_with 'Cannot find specified rootfs' ;} )" || exit 1
+# Извлеките URL tarball rootfs из информации об образе.
 P="${R##*;}"
 echo "https://images.linuxcontainers.org/$P/rootfs.tar.xz"
 }
@@ -243,7 +290,8 @@ echo "Arch: $ARCH"
 echo "Variant: $VARIANT"
 echo "Root FS: $DISTRO $RELEASE"
 echo
-
+# Если ROOTFS_URL не установлен 
+# (например, если пользователь не указал URL rootfs), определите URL автоматически.
 if [ -z "$ROOTFS_URL" ] ; then
 ROOTFS_URL="$(to_lco_link "$ARCH")"
 fi
@@ -256,7 +304,8 @@ cd "$DATA_DIR"
 
 OO="$([ -t 2 ] && echo --progress)"
 
-
+# Используйте исполняемый файл minitar из плагина "essentials", если он доступен.
+# В противном случае загрузите исполняемый файл minitar с GitHub.
 # = Essentials =
 if [ "$UP" != 'no' ] && E_MINITAR="$("$TERMSH" plugin "$ESSENTIALS" minitar)" 2>/dev/null
 then MINITAR="$E_MINITAR"
@@ -265,6 +314,7 @@ then exit_with 'No minitar in the essentials plugin found'
 # ==============
 else
 
+# Загрузите исполняемый файл minitar с GitHub и сделайте его исполняемым.
 echo 'Getting minitar...'
 
 "$TERMSH" cat $OO \
@@ -274,48 +324,58 @@ chmod 755 "$MINITAR"
 
 fi
 
-
 # = Essentials =
+# Этот раздел проверяет, не установлено ли для переменной UP значение «нет» и доступен ли плагин proot из пакета Essentials.
 if [ "$UP" != 'no' ] && E_PROOT="$("$TERMSH" plugin "$ESSENTIALS" proot)" 2>/dev/null
 then
-PROOT="\$(\"\$TERMSH\" plugin '$ESSENTIALS' proot)"
-PROOT_USERLAND="\$(\"\$TERMSH\" plugin '$ESSENTIALS' proot-userland)" || true
+  #Если оба условия верны, установите переменные PROOT и PROOT_USERLAND на пути к двоичным файлам proot.
+  PROOT="\$(\"\$TERMSH\" plugin '$ESSENTIALS' proot)"
+  PROOT_USERLAND="\$(\"\$TERMSH\" plugin '$ESSENTIALS' proot-userland)" || true
 elif [ "$UP" = 'force' ]
-then exit_with 'No proot in the essentials plugin found'
+then 
+  #Если для UP установлено значение «force», выход с сообщением об ошибке
+  exit_with 'No proot in the essentials plugin found'
 # ==============
 else
+  # Если ни одно из вышеперечисленных условий не выполняется, загрузите и извлеките пакет proot с GitHub.
+  echo 'Getting PRoot...'
 
-echo 'Getting PRoot...'
-
-"$TERMSH" cat $OO \
-"https://raw.githubusercontent.com/green-green-avk/build-proot-android/master/packages/proot-android-$ARCH$VARIANT.tar.gz" \
-| "$MINITAR"
-
+  "$TERMSH" cat $OO \
+  "https://raw.githubusercontent.com/green-green-avk/build-proot-android/master/packages/proot-android-$ARCH$VARIANT.tar.gz" \
+  | "$MINITAR"
 fi
 
 
-# = Test =
+# = Тест =
+# В этом разделе проверяется, является ли версия Android SDK и версия SDK целевого приложения 29 или выше.
 [ -n "$MY_ANDROID_SDK" -a "$MY_ANDROID_SDK" -ge 29 \
 -a -n "$APP_TARGET_SDK" -a "$APP_TARGET_SDK" -ge 29 ] \
-&& { eval "$PROOT" --help > /dev/null 2>&1 || \
-exit_with "$(
-echo 'Current PRoot version does not start.'
-echo "Your Android version is 10 (API 29) or higher and this Another Term version targets API $APP_TARGET_SDK."
-echo 'See https://green-green-avk.github.io/AnotherTerm-docs/local-shell-w-x.html#main_content'
-)" ; } || true
+&& { 
+  # Если оба условия верны, проверяем, может ли запуститься текущая версия proot или нет
+  eval "$PROOT" --help > /dev/null 2>&1 || \
+  # Если нет, выйдите с сообщением об ошибке, объясняющим, почему
+  exit_with "$(
+    echo 'Current PRoot version does not start.'
+    echo "Your Android version is 10 (API 29) or higher and this Another Term version targets API $APP_TARGET_SDK."
+    echo 'See https://green-green-avk.github.io/AnotherTerm-docs/local-shell-w-x.html#main_content'
+  )" ; 
+} || true
 # ========
 
+# Последние три строки создают два каталога (root и tmp) 
+# внутри каталога ROOTFS_DIR, а затем изменяют текущий 
+# рабочий каталог на root
 
 mkdir -p "$ROOTFS_DIR/root"
 mkdir -p "$ROOTFS_DIR/tmp"
 cd "$ROOTFS_DIR/root"
 
-
+#Загрузите и извлеките корневую файловую систему Linux.
 echo 'Getting Linux root FS...'
 
 "$TERMSH" cat $OO "$ROOTFS_URL" | "$MINITAR" || echo 'Possibly URL was changed: recheck on the site.' >&2
 
-
+#Запрашивать у пользователя обычное имя пользователя и предпочтительную оболочку
 if [ -z "$NI" ] ; then
 echo
 echo -e '\e[1m/etc/passwd:\e[0m'
@@ -327,7 +387,7 @@ prompt 'Preferred shell' "$FAV_SHELL" FAV_SHELL
 echo
 fi
 
-
+#Настройте сценарий запуска с параметрами конфигурации
 echo 'Setting up run script...'
 
 mkdir -p etc/proot
@@ -354,7 +414,7 @@ if [ "\${_KERNEL_VERSION%%.*}" -lt 4 ] ; then
  PROOT_OPT_ARGS+=('-k' '4.0.0')
 fi
 
-# Android >= 9 can have a read restictiction
+# Android >= 9 может иметь ограничение на чтение
 # on '/proc/version'.
 cat /proc/version >/dev/null 2>&1 || {
  _PROC_VERSION="\$CFG_DIR/proc.version.cfg"
@@ -362,10 +422,11 @@ cat /proc/version >/dev/null 2>&1 || {
  PROOT_OPT_ARGS+=('-b' "\$_PROC_VERSION:/proc/version")
 }
 
-# Application data shared directory.
+# Общий каталог данных для приложения
 PROOT_OPT_ARGS+=('-b' "\$SHARED_DATA_DIR:/mnt/shared")
 
-# Uncomment to manipulate Android application own private data directory.
+# Раскомментируйте, чтобы управлять собственным каталогом личных данных
+#  приложения Android.
 #PROOT_OPT_ARGS+=('-b' '/data')
 
 # =======
@@ -382,8 +443,8 @@ EOF
 'https://raw.githubusercontent.com/green-green-avk/AnotherTerm-scripts/master/assets/run-tpl' \
 > etc/proot/run
 chmod 755 etc/proot/run
-rm -r ../run 2>/dev/null || true # Jelly Bean has no `-f' option (API 16 at least).
-ln -s root/etc/proot/run ../run # KitKat can only `ln -s'.
+rm -r ../run 2>/dev/null || true # Jelly Bean не имеет опции `-f' (по крайней мере, API 16).
+ln -s root/etc/proot/run ../run # KitKat может использовать только `ln -s'.
 
 
 echo 'Configuring...'
@@ -398,12 +459,13 @@ EOF
 
 chmod 700 bin/termsh
 
-rm -r etc/resolv.conf 2>/dev/null || true # Ubuntu Focal
+rm -r etc/resolv.conf 2>/dev/null || true # Бесплатный Фокус
 cat << EOF > etc/resolv.conf
 nameserver 8.8.8.8
 nameserver 8.8.4.4
 EOF
 
+#Настройте среду с локалью и настройками PS1
 cat << EOF > etc/profile.d/locale.sh
 if [ -f /etc/default/locale ]
 then
@@ -416,7 +478,9 @@ PS1='\[\e[32m\]\u\[\e[33m\]@\[\e[32m\]\h\[\e[33m\]:\[\e[32m\]\w\[\e[33m\]\\$\[\e
 PS2='\[\e[33m\]>\[\e[0m\] '
 EOF
 
-# We have no adduser or useradd here...
+# Здесь нет ни adduser, ни useradd...
+# Создать учетную запись пользователя с указанным именем пользователя и оболочкой
+# и добавьте эту учетную запись пользователя в файл `/etc/passwd`
 cp -a etc/skel home/$REG_USER 2>/dev/null || mkdir -p home/$REG_USER
 echo \
 "$REG_USER:x:$USER_ID:$USER_ID:guest:/home/$REG_USER:$FAV_SHELL" \
