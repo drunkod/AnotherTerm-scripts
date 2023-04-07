@@ -315,6 +315,7 @@ then exit_with 'No minitar in the essentials plugin found'
 else
 
 # Загрузите исполняемый файл minitar с GitHub и сделайте его исполняемым.
+# minitar - command line tar/gz/bzip2/xz unarchiver utility for Android
 echo 'Getting minitar...'
 
 "$TERMSH" cat $OO \
@@ -362,7 +363,7 @@ fi
 } || true
 # ========
 
-# Последние три строки создают два каталога (root и tmp) 
+# Создание двух каталогов (root и tmp) 
 # внутри каталога ROOTFS_DIR, а затем изменяют текущий 
 # рабочий каталог на root
 
