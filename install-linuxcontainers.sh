@@ -1,4 +1,4 @@
-#!/система/бин/ш
+#!/system/bin/sh
 
 # Различные архивы linux rootfs из сценария установки linuxcontainers.org.
 
