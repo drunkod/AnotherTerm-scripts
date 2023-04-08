@@ -17,6 +17,7 @@ alpine-minirootfs-code4.9-arm64.tar.gz
 
 `( export ROOTFS_URL="https://gitlab.com/drunkoda/Anlinux-Resources/-/raw/main/Rootfs/Alpine/arm64/alpine-minirootfs-code4.9-arm64.tar.gz" ; S=install-linuxcontainers.sh ; "$TERMSH" copy -f -fu "https://raw.githubusercontent.com/drunkod/AnotherTerm-scripts/master/$S" -tp . && chmod 755 $S && sh ./$S -a alpine code4.9 )`
 
-Rootfs/Alpine/arm64/alpcodevc-rootfs-arm64.tar.gz
 
-`( export ROOTFS_URL="https://gitlab.com/drunkoda/Anlinux-Resources/-/raw/main/Rootfs/Alpine/arm64/alpcodevc-rootfs-arm64.tar.gz" ; S=install-linuxcontainers.sh ; "$TERMSH" copy -f -fu "https://raw.githubusercontent.com/drunkod/AnotherTerm-scripts/master/$S" -tp . && chmod 755 $S && sh ./$S -a alpine code4.9 )`
+Rootfs/Alpine/arm64/alp-ff-rootfs-arm64.tar.gz
+
+`( export ROOTFS_URL="https://gitlab.com/drunkoda/Anlinux-Resources/-/raw/main/Rootfs/Alpine/arm64/alp-ff-rootfs-arm64.tar.gz" ; S=install-linuxcontainers.sh ; "$TERMSH" copy -f -fu "https://raw.githubusercontent.com/drunkod/AnotherTerm-scripts/master/$S" -tp . && chmod 755 $S && sh ./$S -a alpine 3.17 )`
