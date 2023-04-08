@@ -217,8 +217,8 @@ UE_RUN="$("$TERMSH" uri-encode "$RUN")"
 
 else
 # Запросить разрешение на управление избранным
-"$TERMSH" request-permission favmgmt 'Installer is going to create a regular user and a root launching favs.' \
 # Установите ловушку для отзыва разрешения и снимите функцию ловушки, когда она будет завершена
+"$TERMSH" request-permission favmgmt 'Installer is going to create a regular user and a root launching favs.' \
 && {
 finally() { "$TERMSH" revoke-permission favmgmt ; trap - EXIT ; unset finally ; }
 trap 'finally' EXIT
