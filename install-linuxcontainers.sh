@@ -280,6 +280,7 @@ local P
 # Загрузите индекс доступных образов с сайта LXC и найдите требуемый образ.
 R="$( { "$TERMSH" cat 'https://images.linuxcontainers.org/meta/1.0/index-user' || exit_with 'Cannot download index from linuxcontainers.org' ;} \
 | { find_prefix "$DISTRO;$RELEASE;$(to_lco_arch "$1");default;" || exit_with 'Cannot find specified rootfs' ;} )" || exit 1
+
 # Извлеките URL tarball rootfs из информации об образе.
 P="${R##*;}"
 echo "https://images.linuxcontainers.org/$P/rootfs.tar.xz"
@@ -294,6 +295,7 @@ echo
 # (например, если пользователь не указал URL rootfs), определите URL автоматически.
 if [ -z "$ROOTFS_URL" ] ; then
 ROOTFS_URL="$(to_lco_link "$ARCH")"
+echo "Пользователь не указал, URL rootfs: $ROOTFS_URL"
 fi
 
 echo "Source: $ROOTFS_URL"
