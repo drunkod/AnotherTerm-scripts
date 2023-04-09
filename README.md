@@ -21,7 +21,8 @@ Rootfs/Alpine/arm64/alp-code-rootfs.tar.gz from https://github.com/martinussuher
 
 `( export ROOTFS_URL="https://gitlab.com/drunkoda/Anlinux-Resources/-/raw/main/Rootfs/Alpine/arm64/alp-code-rootfs.tar.gz" ; S=install-linuxcontainers.sh ; "$TERMSH" copy -f -fu "https://raw.githubusercontent.com/drunkod/AnotherTerm-scripts/master/$S" -tp . && chmod 755 $S && sh ./$S -a alpine 3.17 )`
 
-https://github.com/drunkod/coder-core/releases/download/20230409-162125/restreamer-rootfs.tar.gz fro m arm64 build
+https://github.com/drunkod/coder-core/releases/download/20230409-174050/restreamer-rootfs.tar.gz fro m arm64 build
 
-`( export ROOTFS_URL="https://github.com/drunkod/coder-core/releases/download/20230409-162125/restreamer-rootfs.tar.gz" ; S=install-linuxcontainers.sh ; "$TERMSH" copy -f -fu "https://raw.githubusercontent.com/drunkod/AnotherTerm-scripts/master/$S" -tp . && chmod 755 $S && sh ./$S -a alpine 3.17 )`
+`( export ROOTFS_URL="https://github.com/drunkod/coder-core/releases/download/20230409-174050/restreamer-rootfs.tar.gz" ; S=install-linuxcontainers.sh ; "$TERMSH" copy -f -fu "https://raw.githubusercontent.com/drunkod/AnotherTerm-scripts/master/$S" -tp . && chmod 755 $S && sh ./$S -a alpine 3.17 )`
+
 
