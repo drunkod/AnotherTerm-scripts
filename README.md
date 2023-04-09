@@ -29,7 +29,7 @@ https://github.com/drunkod/coder-core/releases/download/20230409-191432/master-r
 
 `( export ROOTFS_URL="https://github.com/drunkod/coder-core/releases/download/20230409-191432/master-rootfs.tar.gz" ; S=install-linuxcontainers.sh ; "$TERMSH" copy -f -fu "https://raw.githubusercontent.com/drunkod/AnotherTerm-scripts/master/$S" -tp . && chmod 755 $S && sh ./$S -a alpine 3.17 )`
 
-https://github.com/drunkod/coder-core/releases/download/20230409-200304/ffmpeg_jrottenberg-rootfs.tar.gz 
+https://github.com/drunkod/coder-core/releases/download/20230409-203145/ffmpeg_jrottenberg-rootfs.tar.gz 
 
-`( export ROOTFS_URL="https://github.com/drunkod/coder-core/releases/download/20230409-200304/ffmpeg_jrottenberg-rootfs.tar.gz" ; S=install-linuxcontainers.sh ; "$TERMSH" copy -f -fu "https://raw.githubusercontent.com/drunkod/AnotherTerm-scripts/master/$S" -tp . && chmod 755 $S && sh ./$S -a alpine 3.17 )`
+`( export ROOTFS_URL="https://github.com/drunkod/coder-core/releases/download/20230409-203145/ffmpeg_jrottenberg-rootfs.tar.gz" ; S=install-linuxcontainers.sh ; "$TERMSH" copy -f -fu "https://raw.githubusercontent.com/drunkod/AnotherTerm-scripts/master/$S" -tp . && chmod 755 $S && sh ./$S -a alpine 3.17 )`
 
