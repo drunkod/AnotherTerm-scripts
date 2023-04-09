@@ -25,4 +25,10 @@ https://github.com/drunkod/coder-core/releases/download/20230409-174050/restream
 
 `( export ROOTFS_URL="https://github.com/drunkod/coder-core/releases/download/20230409-174050/restreamer-rootfs.tar.gz" ; S=install-linuxcontainers.sh ; "$TERMSH" copy -f -fu "https://raw.githubusercontent.com/drunkod/AnotherTerm-scripts/master/$S" -tp . && chmod 755 $S && sh ./$S -a alpine 3.17 )`
 
+https://github.com/drunkod/coder-core/releases/download/20230409-191432/master-rootfs.tar.gz
+
+`( export ROOTFS_URL="https://github.com/drunkod/coder-core/releases/download/20230409-191432/master-rootfs.tar.gz" ; S=install-linuxcontainers.sh ; "$TERMSH" copy -f -fu "https://raw.githubusercontent.com/drunkod/AnotherTerm-scripts/master/$S" -tp . && chmod 755 $S && sh ./$S -a alpine 3.17 )`
+
+
+
 
