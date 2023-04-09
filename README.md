@@ -21,12 +21,12 @@ Rootfs/Alpine/arm64/alp-code-rootfs.tar.gz from https://github.com/martinussuher
 
 `( export ROOTFS_URL="https://gitlab.com/drunkoda/Anlinux-Resources/-/raw/main/Rootfs/Alpine/arm64/alp-code-rootfs.tar.gz" ; S=install-linuxcontainers.sh ; "$TERMSH" copy -f -fu "https://raw.githubusercontent.com/drunkod/AnotherTerm-scripts/master/$S" -tp . && chmod 755 $S && sh ./$S -a alpine 3.17 )`
 
-https://github.com/drunkod/coder-core/releases/download/20230409-174050/restreamer-rootfs.tar.gz fro m arm64 build
-
-`( export ROOTFS_URL="https://github.com/drunkod/coder-core/releases/download/20230409-174050/restreamer-rootfs.tar.gz" ; S=install-linuxcontainers.sh ; "$TERMSH" copy -f -fu "https://raw.githubusercontent.com/drunkod/AnotherTerm-scripts/master/$S" -tp . && chmod 755 $S && sh ./$S -a alpine 3.17 )`
+https://github.com/drunkod/coder-core/releases/download/20230409-212339/restreamer-rootfs.tar.gz from arm64 build
+restreamer
+`( export ROOTFS_URL="https://github.com/drunkod/coder-core/releases/download/20230409-212339/restreamer-rootfs.tar.gz" ; S=install-linuxcontainers.sh ; "$TERMSH" copy -f -fu "https://raw.githubusercontent.com/drunkod/AnotherTerm-scripts/master/$S" -tp . && chmod 755 $S && sh ./$S -a alpine 3.17 )`
 
 https://github.com/drunkod/coder-core/releases/download/20230409-191432/master-rootfs.tar.gz
-
+node js
 `( export ROOTFS_URL="https://github.com/drunkod/coder-core/releases/download/20230409-191432/master-rootfs.tar.gz" ; S=install-linuxcontainers.sh ; "$TERMSH" copy -f -fu "https://raw.githubusercontent.com/drunkod/AnotherTerm-scripts/master/$S" -tp . && chmod 755 $S && sh ./$S -a alpine 3.17 )`
 
 https://github.com/drunkod/coder-core/releases/download/20230409-203145/ffmpeg_jrottenberg-rootfs.tar.gz 
